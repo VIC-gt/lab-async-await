@@ -1,4 +1,53 @@
-// Write your code here! 
+// Write your code here! const API_URL = "https://jsonplaceholder.typicode.com/posts";
+
+// Fetch using async/await
+async function fetchPosts() {
+  try {
+    const response = await fetch(API_URL);
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch posts");
+    }
+
+    const data = await response.json();
+    return data;
+
+  } catch (error) {
+    console.error("Error:", error.message);
+  }
+}
+
+// Display posts
+async function displayPosts() {
+  const posts = await fetchPosts();
+
+  if (!posts) return;
+
+  const container = document.getElementById("posts");
+
+  // clear before adding (important for tests)
+  container.innerHTML = "";
+
+  posts.forEach(post => {
+    const postDiv = document.createElement("div");
+
+    postDiv.innerHTML = `
+      <h3>${post.title}</h3>
+      <p>${post.body}</p>
+    `;
+
+    container.appendChild(postDiv);
+  });
+}
+
+// Run automatically
+displayPosts();
+
+// export for testing (IMPORTANT)
+module.exports = {
+  fetchPosts,
+  displayPosts
+};
 // Select container where posts will be displayed
 const postContainer = document.getElementById("posts");
 

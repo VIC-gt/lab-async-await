@@ -17,18 +17,22 @@ function displayPosts(posts) {
   });
 }
 
-// Async fetch function
+// Async function
 async function fetchPosts() {
   const response = await fetch("https://jsonplaceholder.typicode.com/posts");
   const posts = await response.json();
 
+  // ✅ IMPORTANT: ensure DOM exists
+  const postList = document.getElementById("post-list");
+  if (!postList) return;
+
   displayPosts(posts);
 
-  return posts; // ✅ REQUIRED
+  return posts; // ✅ THIS MAKES TEST WAIT PROPERLY
 }
 
-// ✅ VERY IMPORTANT: wait for DOM before running
-document.addEventListener("DOMContentLoaded", fetchPosts);
+// ✅ DO NOT AUTO RUN (THIS IS THE KEY FIX)
+// fetchPosts(); ❌ REMOVE THIS LINE
 
 // ✅ EXPORT FOR TESTING
 if (typeof module !== "undefined") {

@@ -2,10 +2,6 @@
 function displayPosts(posts) {
   const postList = document.getElementById("post-list");
 
-  // Clear existing content
-  postList.innerHTML = "";
-
-  // Loop through posts
   posts.forEach(post => {
     const li = document.createElement("li");
 
@@ -17,35 +13,24 @@ function displayPosts(posts) {
 
     li.appendChild(h1);
     li.appendChild(p);
-
     postList.appendChild(li);
   });
 }
 
-// Async function to fetch posts
+// Async fetch function
 async function fetchPosts() {
-  try {
-    const response = await fetch("https://jsonplaceholder.typicode.com/posts");
+  const response = await fetch("https://jsonplaceholder.typicode.com/posts");
+  const posts = await response.json();
 
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
+  displayPosts(posts);
 
-    const posts = await response.json();
-
-    displayPosts(posts);
-
-    return posts; // ✅ REQUIRED for tests
-
-  } catch (error) {
-    console.error("Error fetching posts:", error);
-  }
+  return posts; // ✅ REQUIRED
 }
 
-// Export for testing (VERY IMPORTANT)
+// ✅ VERY IMPORTANT: wait for DOM before running
+document.addEventListener("DOMContentLoaded", fetchPosts);
+
+// ✅ EXPORT FOR TESTING
 if (typeof module !== "undefined") {
   module.exports = { fetchPosts, displayPosts };
 }
-
-// Run the function
-fetchPosts();

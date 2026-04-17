@@ -1,4 +1,4 @@
-// Display posts on the page
+// Function to display posts
 function displayPosts(posts) {
   const postList = document.getElementById("post-list");
 
@@ -7,41 +7,45 @@ function displayPosts(posts) {
 
   // Loop through posts
   posts.forEach(post => {
-    // Create elements
     const li = document.createElement("li");
-    const title = document.createElement("h1");
-    const body = document.createElement("p");
 
-    // Add text content
-    title.textContent = post.title;
-    body.textContent = post.body;
+    const h1 = document.createElement("h1");
+    h1.textContent = post.title;
 
-    // Append elements
-    li.appendChild(title);
-    li.appendChild(body);
+    const p = document.createElement("p");
+    p.textContent = post.body;
+
+    li.appendChild(h1);
+    li.appendChild(p);
+
     postList.appendChild(li);
   });
 }
 
-// Fetch posts using async/await
+// Async function to fetch posts
 async function fetchPosts() {
   try {
     const response = await fetch("https://jsonplaceholder.typicode.com/posts");
 
-    // Check if response is OK
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
 
     const posts = await response.json();
 
-    // Display posts
     displayPosts(posts);
+
+    return posts; // ✅ REQUIRED for tests
 
   } catch (error) {
     console.error("Error fetching posts:", error);
   }
 }
 
-// Call the function
+// Export for testing (VERY IMPORTANT)
+if (typeof module !== "undefined") {
+  module.exports = { fetchPosts, displayPosts };
+}
+
+// Run the function
 fetchPosts();

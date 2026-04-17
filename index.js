@@ -1,40 +1,43 @@
 // Function to display posts
 function displayPosts(posts) {
-  const postList = document.getElementById("post-list");
+  const ul = document.getElementById("post-list");
 
+  // Clear previous posts
+  ul.innerHTML = "";
+
+  // Loop through posts
   posts.forEach(post => {
+    // Create elements
     const li = document.createElement("li");
-
     const h1 = document.createElement("h1");
-    h1.textContent = post.title;
-
     const p = document.createElement("p");
+
+    // Add content
+    h1.textContent = post.title;
     p.textContent = post.body;
 
+    // Append elements
     li.appendChild(h1);
     li.appendChild(p);
-    postList.appendChild(li);
+    ul.appendChild(li);
   });
 }
 
-// Async function
+// Async function to fetch data
 async function fetchPosts() {
-  const response = await fetch("https://jsonplaceholder.typicode.com/posts");
-  const posts = await response.json();
+  try {
+    const response = await fetch("https://jsonplaceholder.typicode.com/posts");
 
-  // ✅ IMPORTANT: ensure DOM exists
-  const postList = document.getElementById("post-list");
-  if (!postList) return;
+    // Convert to JSON
+    const posts = await response.json();
 
-  displayPosts(posts);
+    // Display posts
+    displayPosts(posts);
 
-  return posts; // ✅ THIS MAKES TEST WAIT PROPERLY
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+  }
 }
 
-// ✅ DO NOT AUTO RUN (THIS IS THE KEY FIX)
-// fetchPosts(); ❌ REMOVE THIS LINE
-
-// ✅ EXPORT FOR TESTING
-if (typeof module !== "undefined") {
-  module.exports = { fetchPosts, displayPosts };
-}
+// Call the function
+fetchPosts();

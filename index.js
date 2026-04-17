@@ -1,6 +1,8 @@
-async function getPosts() {
-  const response = await fetch("https://jsonplaceholder.typicode.com/posts");
-  const posts = await response.json();
+function getPosts() {
+  const xhr = new XMLHttpRequest();
+  xhr.open("GET", "https://jsonplaceholder.typicode.com/posts", false); // false = synchronous
+  xhr.send();
+  const posts = JSON.parse(xhr.responseText);
   displayPosts(posts);
 }
 

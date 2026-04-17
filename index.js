@@ -1,88 +1,47 @@
-// Write your code here! const API_URL = "https://jsonplaceholder.typicode.com/posts";
+// Display posts on the page
+function displayPosts(posts) {
+  const postList = document.getElementById("post-list");
 
-// Fetch using async/await
-async function fetchPosts() {
-  try {
-    const response = await fetch(API_URL);
+  // Clear existing content
+  postList.innerHTML = "";
 
-    if (!response.ok) {
-      throw new Error("Failed to fetch posts");
-    }
-
-    const data = await response.json();
-    return data;
-
-  } catch (error) {
-    console.error("Error:", error.message);
-  }
-}
-
-// Display posts
-async function displayPosts() {
-  const posts = await fetchPosts();
-
-  if (!posts) return;
-
-  const container = document.getElementById("posts");
-
-  // clear before adding (important for tests)
-  container.innerHTML = "";
-
+  // Loop through posts
   posts.forEach(post => {
-    const postDiv = document.createElement("div");
+    // Create elements
+    const li = document.createElement("li");
+    const title = document.createElement("h1");
+    const body = document.createElement("p");
 
-    postDiv.innerHTML = `
-      <h3>${post.title}</h3>
-      <p>${post.body}</p>
-    `;
+    // Add text content
+    title.textContent = post.title;
+    body.textContent = post.body;
 
-    container.appendChild(postDiv);
+    // Append elements
+    li.appendChild(title);
+    li.appendChild(body);
+    postList.appendChild(li);
   });
 }
 
-// Run automatically
-displayPosts();
-
-// export for testing (IMPORTANT)
-module.exports = {
-  fetchPosts,
-  displayPosts
-};
-// Select container where posts will be displayed
-const postContainer = document.getElementById("posts");
-
-// Async function to fetch and display posts
-async function getPosts() {
+// Fetch posts using async/await
+async function fetchPosts() {
   try {
-    // Fetch data from external API
     const response = await fetch("https://jsonplaceholder.typicode.com/posts");
 
-    // Convert response to JSON
-    const data = await response.json();
+    // Check if response is OK
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
 
-    // Loop through posts and display them
-    data.forEach((post) => {
-      // Create elements
-      const postDiv = document.createElement("div");
-      const title = document.createElement("h3");
-      const body = document.createElement("p");
+    const posts = await response.json();
 
-      // Assign content
-      title.textContent = post.title;
-      body.textContent = post.body;
-
-      // Build structure
-      postDiv.appendChild(title);
-      postDiv.appendChild(body);
-
-      // Add to page
-      postContainer.appendChild(postDiv);
-    });
+    // Display posts
+    displayPosts(posts);
 
   } catch (error) {
     console.error("Error fetching posts:", error);
   }
 }
 
-// Call function
-getPosts();
+// Call the function
+fetchPosts();
